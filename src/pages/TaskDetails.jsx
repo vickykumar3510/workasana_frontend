@@ -6,6 +6,7 @@ import TaskContext from "../contexts/TaskContext"
 import TeamContext from '../contexts/TeamContext'
 import TagContext from '../contexts/TagContext'
 import OwnerContext from '../contexts/OwnerContext'
+import Sidebar from "../components/Sidebar";
 
 const TaskDetails = () => {
     const { teams } = useContext(TeamContext)
@@ -39,7 +40,7 @@ const TaskDetails = () => {
     }
 
     const task = tasks.find(t => t._id === taskId)
-    if (!task) return <p>Task not found.</p>
+    if (!task) return <p className="task-details-not-found">Task not found.</p>
 
     const dueDate = calculateDueDate(task.timeToComplete)
     const remainingDays = calculateRemainingDays(dueDate)
@@ -51,66 +52,95 @@ const TaskDetails = () => {
 
     return (
         <div className="task-details-bg">
-            <h1 className='page-title'>Task: <span style={{"color" : "#0a58ca"}}>{task.name}</span></h1>
+            <h1 className='page-title'>
+                Task: <span className="task-details-title-accent">{task.name}</span>
+            </h1>
+
             <main className='container'>
-                
-
                 <div className="flexBoxes">
-                    <div className='sidebarCSS'>
-                        <h3>Sidebar</h3>
-                        <Link className='removeLine' to="/dashboard">Back to dashboard</Link>
-                    </div>
+                    <Sidebar />
 
-                    <div>
-                        <h3>Task Details</h3>
+                    <div className="contentArea task-details-content">
+                        <article className="task-details-card" aria-labelledby="task-details-heading">
+                            <header className="task-details-card-header">
+                                <h3 id="task-details-heading">Task Details</h3>
+                                <span
+                                    className={
+                                        task.status === "Completed"
+                                            ? "task-details-status-badge task-details-status-badge--completed"
+                                            : "task-details-status-badge task-details-status-badge--active"
+                                    }
+                                >
+                                    {task.status}
+                                </span>
+                            </header>
 
-                        <p><strong>Name: </strong><span style={{"color" : "#0a58ca"}}>{task.name}</span></p>
+                            <dl className="task-details-dl">
+                                <div className="task-details-row">
+                                    <dt>Name</dt>
+                                    <dd className="task-details-name">{task.name}</dd>
+                                </div>
+                                <div className="task-details-row">
+                                    <dt>Team</dt>
+                                    <dd>
+                                        {teams.length
+                                            ? typeof task.team === "object"
+                                                ? task.team.name
+                                                : teams.find(t => t._id === task.team)?.name
+                                            : "Loading..."}
+                                    </dd>
+                                </div>
+                                <div className="task-details-row">
+                                    <dt>Owners</dt>
+                                    <dd>
+                                        {Array.isArray(task.owners)
+                                            ? task.owners
+                                                .map(o =>
+                                                    typeof o === "object"
+                                                        ? o.name
+                                                        : allOwners.find(owner => owner._id === o)?.name
+                                                )
+                                                .filter(Boolean)
+                                                .join(", ")
+                                            : "—"}
+                                    </dd>
+                                </div>
+                                <div className="task-details-row">
+                                    <dt>Tags</dt>
+                                    <dd>
+                                        {Array.isArray(task.tags)
+                                            ? task.tags
+                                                .map(tagId => tags.find(tag => tag._id === tagId)?.name)
+                                                .filter(Boolean)
+                                                .join(", ")
+                                            : "—"}
+                                    </dd>
+                                </div>
+                                <div className="task-details-row">
+                                    <dt>Due date</dt>
+                                    <dd>{dueDate.toLocaleDateString()}</dd>
+                                </div>
+                            </dl>
 
-                        <p><strong>
-                            Team:</strong> {teams.length
-                                ? typeof task.team === "object"
-                                    ? task.team.name
-                                    : teams.find(t => t._id === task.team)?.name
-                                : "Loading..."}
-                        </p>
+                            <div className="task-details-reminder">
+                                <span className="task-details-reminder-label">Time remaining</span>
+                                <span className="task-details-reminder-value">
+                                    {remainingDays} day{remainingDays !== 1 && "s"}
+                                </span>
+                            </div>
 
-                        <p><strong>
-                            Owners:</strong> {Array.isArray(task.owners)
-                                ? task.owners
-                                    .map(o =>
-                                        typeof o === "object"
-                                            ? o.name
-                                            : allOwners.find(owner => owner._id === o)?.name
-                                    )
-                                    .filter(Boolean)
-                                    .join(", ")
-                                : "—"}
-                        </p>
-
-                        <p><strong>
-                            Tags:</strong> {Array.isArray(task.tags)
-                                ? task.tags
-                                    .map(tagId => tags.find(tag => tag._id === tagId)?.name)
-                                    .filter(Boolean)
-                                    .join(", ")
-                                : "—"}
-                        </p>
-
-                        <p><strong>Due Date:</strong> {dueDate.toLocaleDateString()}</p>
-                        <p><strong>Status:</strong> <span style={{ color: task.status === "Completed" ? "green" : "orange" }}>{task.status}</span></p>
-
-                        <hr />
-
-                        <p><strong>
-                            Time Remaining:</strong> {remainingDays} day
-                            {remainingDays !== 1 && "s"}
-                        </p>
-
-                        <button className='rest-btn' onClick={markAsCompleted}>
-                            {task.status === "Completed"
-                                ? "Completed"
-                                : "Mark as Completed"}
-                        </button>
+                            <footer className="task-details-actions">
+                                <button
+                                    type="button"
+                                    className={`rest-btn task-details-action-btn ${task.status === "Completed" ? "task-details-action-btn--done" : ""}`}
+                                    onClick={markAsCompleted}
+                                >
+                                    {task.status === "Completed"
+                                        ? "Completed"
+                                        : "Mark as Completed"}
+                                </button>
+                            </footer>
+                        </article>
                     </div>
                 </div>
             </main>

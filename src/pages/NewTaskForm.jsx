@@ -8,6 +8,7 @@ import ProjectContext from "../contexts/ProjectContext";
 import TaskContext from "../contexts/TaskContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 const NewTaskForm = () => {
   const navigate = useNavigate()
@@ -113,6 +114,7 @@ const NewTaskForm = () => {
   return (
     <div className="formPg-bg">
       <h1 className='page-title'>New Task Form</h1>
+
       <main className="container">
         {loading && (
           <div className="loader-container">
@@ -121,27 +123,24 @@ const NewTaskForm = () => {
           </div>
         )}
 
-        
-
         <div className="flexBoxes">
-          <div className="sidebarCSS">
-            <h3>Sidebar</h3>
-            <Link className="removeLine" to="/dashboard">
-              Back to dashboard
-            </Link>
-          </div>
+          <Sidebar />
 
-          <div>
+          <div className="contentArea pm-content">
             <h3>
-              Create task for project{" "}<span className="form-row">
-              <select value={project} onChange={(e) => setProject(e.target.value)}>
-                <option value="">Select Project</option>
-                {projects.map((p) => (
-                  <option key={p._id} value={p._id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
+              Create task for project
+              <span className="form-row">
+                <select
+                  value={project}
+                  onChange={(e) => setProject(e.target.value)}
+                >
+                  <option value="">Select Project</option>
+                  {projects.map((p) => (
+                    <option key={p._id} value={p._id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
               </span>
             </h3>
 
@@ -149,13 +148,21 @@ const NewTaskForm = () => {
               {/* TASK NAME */}
               <div className="form-row">
                 <label>Task Name:</label>
-                <input value={name} onChange={(e) => setName(e.target.value)} />
-              </div><br/>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              <br />
 
               {/* TEAM */}
               <div className="form-row">
                 <label>Team:</label>
-                <select value={team} onChange={(e) => setTeam(e.target.value)}>
+                <select
+                  value={team}
+                  onChange={(e) => setTeam(e.target.value)}
+                >
                   <option value="">Select Team</option>
                   {teams.map((t) => (
                     <option key={t._id} value={t._id}>
@@ -163,7 +170,9 @@ const NewTaskForm = () => {
                     </option>
                   ))}
                 </select>
-              </div><br/>
+              </div>
+
+              <br />
 
               {/* OWNERS (MULTI) */}
               <div className="form-row">
@@ -173,7 +182,10 @@ const NewTaskForm = () => {
                   value={ownerSelected}
                   onChange={(e) =>
                     setSelectedOwner(
-                      Array.from(e.target.selectedOptions, (o) => o.value)
+                      Array.from(
+                        e.target.selectedOptions,
+                        (o) => o.value
+                      )
                     )
                   }
                 >
@@ -183,7 +195,9 @@ const NewTaskForm = () => {
                     </option>
                   ))}
                 </select>
-              </div><br/>
+              </div>
+
+              <br />
 
               {/* TAGS (MULTI) */}
               <div className="form-row">
@@ -193,7 +207,10 @@ const NewTaskForm = () => {
                   value={tagSelected}
                   onChange={(e) =>
                     setSelectedTag(
-                      Array.from(e.target.selectedOptions, (t) => t.value)
+                      Array.from(
+                        e.target.selectedOptions,
+                        (t) => t.value
+                      )
                     )
                   }
                 >
@@ -203,44 +220,75 @@ const NewTaskForm = () => {
                     </option>
                   ))}
                 </select>
-              </div><br/>
+              </div>
 
-              {/* ADD TAG */}
-              <div className="form-row">
-                <input
-                  placeholder="Add new tag"
-                  value={newTagName}
-                  onChange={(e) => setNewTagName(e.target.value)}
-                />
-                <button type="button" onClick={handleAddTag}>
-                  + Add Tag
-                </button>
-              </div><br/>
+              <br />
+
+              {/* ADD TAG (no visible label; spacer via CSS ::before) */}
+              <div className="form-row form-row-add-tag-row">
+                <div className="form-row-add-tag-field">
+                  <input
+                    placeholder="Add new tag"
+                    aria-label="Add new tag name"
+                    value={newTagName}
+                    onChange={(e) => setNewTagName(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="form-row-add-tag-btn"
+                    onClick={handleAddTag}
+                  >
+                    + Add Tag
+                  </button>
+                </div>
+              </div>
+
+              <br />
 
               {/* DUE DATE */}
               <div className="form-row">
                 <label>Due Date:</label>
-                <input type="date" value={dueDate} onChange={handleDueDateChange} />
-              </div><br/>
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={handleDueDateChange}
+                />
+              </div>
+
+              <br />
 
               {/* TIME */}
               <div className="form-row">
                 <label>Time (Days):</label>
-                <input type="number" value={timeToComplete} readOnly />
-              </div><br/>
+                <input
+                  type="number"
+                  value={timeToComplete}
+                  readOnly
+                />
+              </div>
+
+              <br />
 
               {/* STATUS */}
               <div className="form-row">
                 <label>Status:</label>
-                <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
                   <option>To Do</option>
                   <option>In Progress</option>
                   <option>Completed</option>
                   <option>Blocked</option>
                 </select>
-              </div><br/>
+              </div>
 
-              <button className="submit-btn" type="submit">
+              <br />
+
+              <button
+                className="submit-btn"
+                type="submit"
+              >
                 Create Task
               </button>
             </form>

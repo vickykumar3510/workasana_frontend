@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import TeamContext from "../contexts/TeamContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 const NewTeamForm = () => {
   const navigate = useNavigate()
@@ -14,6 +15,14 @@ const NewTeamForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      !name.trim() ||
+      !description.trim()
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
 
     await addTeam({ name, description });
     navigate('/teammanagement')
@@ -26,46 +35,53 @@ const NewTeamForm = () => {
   return (
     <div className="formPg-bg">
       <h1 className='page-title'>New Team Form</h1>
+
       <main className="container">
         {loading && (
-  <div className="loader-container">
-    <div className="spinner"></div>
-    <p>Loading...</p>
-  </div>
-)}
-        
-        
-        <div className="flexBoxes">
-          <div className="sidebarCSS">
-            <h3>Sidebar</h3>
-            <Link className='removeLine' to="/dashboard">Back to Dashboard</Link>
+          <div className="loader-container">
+            <div className="spinner"></div>
+            <p>Loading...</p>
           </div>
-          <div>
+        )}
+
+        <div className="flexBoxes">
+          <Sidebar />
+
+          <div className="contentArea pm-content">
             <h3>Create a new team</h3>
+
             <form onSubmit={handleSubmit}>
               <div className="form-row">
-              <label>Name:</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+                <label>Name:</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </div>
+
               <br />
+
               <div className="form-row">
-              <label>Description:</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></textarea>
-              <br />
+                <label>Description:</label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                ></textarea>
+
+                <br />
               </div>
+
               <div>
-                <button style={{"marginLeft" : "112px"}} className='submit-btn' type="submit" disabled={!name}>
-                Submit
-              </button>
+                <button
+                  style={{ marginLeft: "112px" }}
+                  className='submit-btn'
+                  type="submit"
+                  disabled={!name}
+                >
+                  Submit
+                </button>
               </div>
-              
             </form>
           </div>
         </div>

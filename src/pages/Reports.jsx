@@ -1,8 +1,8 @@
-import '../App.css'
+import "../App.css";
 import { useEffect, useState } from "react";
 import { Bar, Pie } from "react-chartjs-2";
-import { Link } from "react-router-dom";
-import '../charts/ChartSetup'
+import Sidebar from "../components/Sidebar";
+import "../charts/ChartSetup";
 
 const Reports = () => {
   const [workDoneLastWeek, setWorkDoneLastWeek] = useState(0);
@@ -49,11 +49,11 @@ const Reports = () => {
   }, []);
 
   const teamChartData = {
-    labels: tasksByTeam.map(t => t.teamName),
+    labels: tasksByTeam.map((t) => t.teamName),
     datasets: [
       {
         label: "Tasks Closed",
-        data: tasksByTeam.map(t => t.closedTasks),
+        data: tasksByTeam.map((t) => t.closedTasks),
         backgroundColor: [
           "#4f46e5",
           "#22c55e",
@@ -66,11 +66,11 @@ const Reports = () => {
   };
 
   const ownerChartData = {
-    labels: tasksByOwner.map(o => o.ownerName),
+    labels: tasksByOwner.map((o) => o.ownerName),
     datasets: [
       {
         label: "Tasks Closed",
-        data: tasksByOwner.map(o => o.closedTasks),
+        data: tasksByOwner.map((o) => o.closedTasks),
         backgroundColor: [
           "#6366f1",
           "#ec4899",
@@ -94,63 +94,68 @@ const Reports = () => {
 
   return (
     <main className="reports-bg">
-      <h1 className='page-title'>Workasana Reports</h1>
+      <h1 className="page-title">Workasana Reports</h1>
+
       <div className="container">
-                {loading && (
-  <div className="loader-container">
-    <div className="spinner"></div>
-    <p>Loading...</p>
-  </div>
-)}
-        
         <div className="flexBoxes">
-          {/* Sidebar */}
-          <div className="sidebarCSS">
-            <h3>Reports</h3>
-            <Link className="removeLine" to="/dashboard">
-              Back to Dashboard
-            </Link>
-          </div>
-
-          {/* Content */}
-          <div>
-            <h3>Report Overview</h3>
-
-            <p>
-              <strong style={{ color: "#16a34a" }}>
-                Total Work Done Last Week:
-              </strong>{" "}
-              {workDoneLastWeek}
-            </p>
-
-            <p>
-              <strong style={{ color: "#dc2626" }}>
-                Total Days of Work Pending:
-              </strong>{" "}
-              {pendingWorkDays}
-            </p>
-
-            <p>
-              <strong style={{ color: "#4f46e5" }}>
-                Tasks Closed by Team:
-              </strong>{" "}
-              {totalTeamClosed}
-            </p>
-
-            <div className='barChart' style={{marginBottom: "30px" }}>
-              <Bar data={teamChartData} />
+          <Sidebar />
+          {loading && (
+            <div className="loader-container reports-page-loader">
+              <div className="spinner"></div>
+              <p>Loading...</p>
             </div>
+          )}
 
-            <p>
-              <strong style={{ color: "#0ea5e9" }}>
-                Tasks Closed by Owner:
-              </strong>{" "}
-              {totalOwnerClosed}
-            </p>
+          <div className="contentArea reports-content">
+            <header className="reports-header">
+              <h3>Report Overview</h3>
+              <p className="reports-lede">
+                Snapshot of throughput and outstanding effort across teams.
+              </p>
+            </header>
 
-            <div className='pieChart'>
-              <Pie data={ownerChartData} />
-            </div>
+            <section className="reports-kpi-grid" aria-label="Summary metrics">
+              <article className="reports-kpi reports-kpi--done">
+                <span className="reports-kpi-label">Total work done last week</span>
+                <span className="reports-kpi-value">{workDoneLastWeek}</span>
+              </article>
+              <article className="reports-kpi reports-kpi--pending">
+                <span className="reports-kpi-label">Total days of work pending</span>
+                <span className="reports-kpi-value">{pendingWorkDays}</span>
+              </article>
+            </section>
+
+            <section
+              className="reports-chart-section"
+              aria-labelledby="reports-chart-team-title"
+            >
+              <div className="reports-chart-card">
+                <div className="reports-chart-card-head">
+                  <h4 id="reports-chart-team-title">Tasks closed by team</h4>
+                  <span className="reports-chart-pill">{totalTeamClosed} closed</span>
+                </div>
+                <div className="reports-chart-body barChart">
+                  <Bar data={teamChartData} />
+                </div>
+              </div>
+            </section>
+
+            <section
+              className="reports-chart-section"
+              aria-labelledby="reports-chart-owner-title"
+            >
+              <div className="reports-chart-card">
+                <div className="reports-chart-card-head">
+                  <h4 id="reports-chart-owner-title">Tasks closed by owner</h4>
+                  <span className="reports-chart-pill reports-chart-pill--owner">
+                    {totalOwnerClosed} closed
+                  </span>
+                </div>
+                <div className="reports-chart-body pieChart">
+                  <Pie data={ownerChartData} />
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>

@@ -25,24 +25,25 @@ const SignUpPage = () => {
         <>
         <main className='signUp-bg'>
         <div className='loginPgCenter'>
-            <p className='company-name' style={{fontSize: "30px"}}>Welcome to workasana</p>
-            <p style={{"color" : "red"}}>Please fill the below details to create your account</p><br/>
-            <section>
+            <p className='company-name loginPgCenter-brand'>Welcome to workasana</p>
+            <p className="loginPgCenter-intro">Please fill the below details to create your account</p>
+            <section className="loginPgCenter-fields">
                 <div className='form-row'>
-            <label htmlFor="fullName" >Full Name:</label>
-            <input className='box-format' type="text" id="fullName" placeholder='enter full name' value={name} onChange={(e) => setname(e.target.value)}/><br/><br/><br/>
-            </div>
-            <div className='form-row'>
-            <label htmlFor="">Email:</label>
-            <input className='box-format' type="email" placeholder='enter email' id="email" value={email} onChange={(e) => setEmail(e.target.value)}/><br/><br/><br/>
-            </div>
-            <div className='form-row'>
-            <label htmlFor="password">Password:</label>
-            <input className='box-format' type="text" id="password" placeholder='create password' value={password} onChange={(e) => setPassword(e.target.value)}/><br/><br/><br/>
-            </div>
-            <button className='btn' onClick={accountHandler} disabled={!name || !password || !email}>Create account</button>{" "}<br/><br/>
-            
-            <Link className='removeLine forALine' to="/">Back to Sign In</Link>
+                    <label htmlFor="fullName">Full Name:</label>
+                    <input className='box-format' type="text" id="fullName" placeholder='enter full name' value={name} onChange={(e) => setname(e.target.value)}/>
+                </div>
+                <div className='form-row'>
+                    <label htmlFor="email">Email:</label>
+                    <input className='box-format' type="email" placeholder='enter email' id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                </div>
+                <div className='form-row'>
+                    <label htmlFor="password">Password:</label>
+                    <input className='box-format' type="text" id="password" placeholder='create password' value={password} onChange={(e) => setPassword(e.target.value)}/>
+                </div>
+                <div className="loginPgCenter-actions">
+                    <button className='btn' onClick={accountHandler} disabled={!name || !password || !email}>Create account</button>
+                    <Link className='removeLine forALine loginPgCenter-backLink' to="/">Back to Sign In</Link>
+                </div>
             </section>
         </div>
         </main>

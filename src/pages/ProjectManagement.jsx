@@ -5,6 +5,7 @@ import TaskContext from "../contexts/TaskContext"
 import OwnerContext from '../contexts/OwnerContext'
 import TagContext from '../contexts/TagContext'
 import { useContext, useState } from "react"
+import Sidebar from "../components/Sidebar"
 
 const ProjectManagement = () => {
   const { projectId } = useParams()
@@ -16,7 +17,7 @@ const ProjectManagement = () => {
   // owner, tag, and sort state
   const [selectedOwner, setSelectedOwner] = useState("")
   const [selectedTag, setSelectedTag] = useState("")
-  const [sortBy, setSortBy] = useState("") 
+  const [sortBy, setSortBy] = useState("")
 
   const calculateDueDate = (timeToComplete) => {
     const today = new Date()
@@ -70,115 +71,150 @@ const ProjectManagement = () => {
   return (
     <div className="project-management-bg">
       <h1 className='page-title'>
-                  Project: <span style={{ color: "#9A2A2A"}}>{selectedProject.name}</span>
-                </h1>
+        Project:{" "}
+        <span className="pm-title-accent">{selectedProject?.name}</span>
+      </h1>
+
       <main className='container'>
         {loading ? (
-          <div className="loader-container">
+          <div className="loader-container pm-page-loader">
             <div className="spinner"></div>
             <p>Loading...</p>
           </div>
         ) : (
           <>
             {!selectedProject ? (
-              <p>Project not found.</p>
+              <p className="pm-not-found">Project not found.</p>
             ) : (
               <>
                 <div className="flexBoxes">
-                  
-                  <div className='sidebarCSS'>
-                    <h3>Sidebar</h3>
-                    <Link className='removeLine' to="/dashboard">
-                      Back to dashboard
-                    </Link>
-                  </div>
 
-                  <div>
-                    <h3>Task List</h3>
+                  <Sidebar />
+
+                  <div className="contentArea pm-content">
+                    <header className="pm-header">
+                      <h3 id="pm-task-heading">Task list</h3>
+                      <p className="pm-lede">
+                        Filter and sort tasks for this project. Totals reflect your selections.
+                      </p>
+                    </header>
 
                     {projectTasks.length === 0 ? (
-                      <p>No task found for this project.</p>
+                      <p className="pm-empty">No task found for this project.</p>
                     ) : (
-                      <ul>
+                      <ul className="pm-task-list" aria-labelledby="pm-task-heading">
                         {filteredTasks.map((t) => {
                           const dueDate = calculateDueDate(t.timeToComplete)
 
                           return (
-                            <li key={t._id}>
-                              <strong style={{ color: "#0a58ca" }}>{t.name}</strong> —{" "}
-                              {t.status} —{" "}
-                              <span className='miniBox'>
-                                {t.owners?.map(o => o.name).join(", ")}
-                              </span>{" "}
-                              —{" "}
-                              {t.tags
-                                ?.map(tagId => tags.find(tag => tag._id === tagId)?.name)
-                                .filter(Boolean)
-                                .join(", ")}{" "}
-                              —{" "}
-                              <span>
-                                <small style={{ color: "green" }}>
-                                  {dueDate.toLocaleDateString()}
-                                </small>
-                              </span>
-                              <div className='hrLine'></div>
+                            <li key={t._id} className="pm-task-item">
+                              <article className="pm-task-card">
+                                <div className="pm-task-card-head">
+                                  <span className="pm-task-title">{t.name}</span>
+                                  <span
+                                    className={
+                                      t.status === "Completed"
+                                        ? "pm-status pm-status--done"
+                                        : "pm-status pm-status--default"
+                                    }
+                                  >
+                                    {t.status}
+                                  </span>
+                                </div>
+                                <dl className="pm-task-meta">
+                                  <div className="pm-meta-block">
+                                    <dt className="pm-meta-label">Owners</dt>
+                                    <dd className="pm-meta-value">
+                                      <span className="pm-chip pm-chip--owner">
+                                        {t.owners?.map(o => o.name).join(", ") || "—"}
+                                      </span>
+                                    </dd>
+                                  </div>
+                                  <div className="pm-meta-block">
+                                    <dt className="pm-meta-label">Tags</dt>
+                                    <dd className="pm-meta-value">
+                                      <span className="pm-chip pm-chip--tag">
+                                        {t.tags
+                                          ?.map(tagId => tags.find(tag => tag._id === tagId)?.name)
+                                          .filter(Boolean)
+                                          .join(", ") || "—"}
+                                      </span>
+                                    </dd>
+                                  </div>
+                                  <div className="pm-meta-block pm-meta-block--due">
+                                    <dt className="pm-meta-label">Due</dt>
+                                    <dd className="pm-meta-value pm-due">
+                                      {dueDate.toLocaleDateString()}
+                                    </dd>
+                                  </div>
+                                </dl>
+                              </article>
                             </li>
                           )
                         })}
                       </ul>
                     )}
 
-                    <Link to="/newtaskform">
-                      <button className='form-Btn line-txt'>Add New Task</button>
-                    </Link>
-                    <br />
-                    <br />
+                    <div className="pm-toolbar">
+                      <Link to="/newtaskform" className="pm-add-wrap">
+                        <button type="button" className='form-Btn line-txt'>
+                          Add New Task
+                        </button>
+                      </Link>
 
-                    <h3>Filters:</h3>
+                      <section className="pm-panel" aria-label="Task filters">
+                        <h4 className="pm-panel-title">Filters</h4>
+                        <div className="pm-filters">
+                          <div className='simpleFilter pm-filter-row'>
+                            <label htmlFor="owner">By owner</label>
+                            <select
+                              id="owner"
+                              value={selectedOwner}
+                              onChange={(e) => setSelectedOwner(e.target.value)}
+                            >
+                              <option value="">All</option>
+                              {ownerList.map((o, index) => (
+                                <option value={o} key={index}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
 
-                    <div className='simpleFilter'>
-                      <label htmlFor="owner">By Owner: </label>
-                      <select
-                        id="owner"
-                        value={selectedOwner}
-                        onChange={(e) => setSelectedOwner(e.target.value)}
-                      >
-                        <option value="">All</option>
-                        {ownerList.map((o, index) => (
-                          <option value={o} key={index}>{o}</option>
-                        ))}
-                      </select>
+                          <div className='simpleFilter pm-filter-row'>
+                            <label htmlFor="tag">By tag</label>
+                            <select
+                              id="tag"
+                              value={selectedTag}
+                              onChange={(e) => setSelectedTag(e.target.value)}
+                            >
+                              <option value="">All</option>
+                              {tagsList.map((t, index) => (
+                                <option value={t} key={index}>{t}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section className="pm-panel pm-panel--sort" aria-label="Sort tasks">
+                        <h4 className="pm-panel-title">Sort by</h4>
+                        <div className="pm-sort-btns">
+                          <button
+                            type="button"
+                            className={`rest-btn pm-sort-btn ${sortBy === "dueDate" ? "pm-sort-btn--active" : ""}`}
+                            onClick={() => setSortBy("dueDate")}
+                          >
+                            Due date
+                          </button>
+                          <button
+                            type="button"
+                            className={`rest-btn pm-sort-btn ${sortBy === "priority" ? "pm-sort-btn--active" : ""}`}
+                            onClick={() => setSortBy("priority")}
+                          >
+                            Priority
+                          </button>
+                        </div>
+                      </section>
                     </div>
-
-                    <div className='simpleFilter'>
-                      <label htmlFor="tag">By Tag: </label>
-                      <select
-                        id="tag"
-                        value={selectedTag}
-                        onChange={(e) => setSelectedTag(e.target.value)}
-                      >
-                        <option value="">All</option>
-                        {tagsList.map((t, index) => (
-                          <option value={t} key={index}>{t}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <br />
-
-                    <h3>Sort by: </h3>
-                    <button
-                      className='rest-btn'
-                      onClick={() => setSortBy("dueDate")}
-                    >
-                      Due Date
-                    </button>{" "}
-                    <button
-                      className='rest-btn'
-                      onClick={() => setSortBy("priority")}
-                    >
-                      Priority
-                    </button>
                   </div>
                 </div>
               </>

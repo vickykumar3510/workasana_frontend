@@ -3,13 +3,13 @@
 A full-stack task management and team collaboration tool/app where users can create projects, assign tasks to teams and owners, set deadlines, and organize work using tags. It supports authentication, dynamic filtering, URL-based queries, and reporting features to track task progress and team productivity.
 
 ## Demo Link
-[Live Demo](https://major-project-3-frontend.vercel.app/)
+[Live Demo](https://workasana-tool.vercel.app/)
 
 ## Quick Start
 
 ```
-git clone "https://github.com/vickykumar3510/major_project_3_frontend.git"
-cd <major_project_3_frontend.git>
+git clone "https://github.com/vickykumar3510/workasana_frontend.git"
+cd <workasana_frontend.git>
 npm install
 npm run dev
 ```

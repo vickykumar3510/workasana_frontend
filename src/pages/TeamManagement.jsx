@@ -1,32 +1,28 @@
-import '../App.css'
-import { useContext } from "react"
-import TeamContext from "../contexts/TeamContext"
-import { Link } from 'react-router-dom'
+import "../App.css";
+import { useContext } from "react";
+import TeamContext from "../contexts/TeamContext";
+import { Link } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 const TeamManagement = () => {
-  const { loading, teams } = useContext(TeamContext)
+  const { loading, teams } = useContext(TeamContext);
 
   return (
     <div className="team-management-bg">
-       <h1 className='page-title'>Teams Management</h1>
-      <main className='container'>
+      <h1 className="page-title">Teams Management</h1>
+
+      <main className="container">
         {loading && (
-  <div className="loader-container">
-    <div className="spinner"></div>
-    <p>Loading...</p>
-  </div>
-)}
-       
+          <div className="loader-container">
+            <div className="spinner"></div>
+            <p>Loading...</p>
+          </div>
+        )}
 
         <div className="flexBoxes">
-          <div className='sidebarCSS'>
-            <h3>Sidebar</h3>
-            <Link className="removeLine" to="/dashboard">
-              Back to dashboard
-            </Link>
-          </div>
+          <Sidebar />
 
-          <div>
+          <div className="contentArea pm-content">
             <h3>Team List</h3>
 
             {teams.length === 0 ? (
@@ -40,15 +36,16 @@ const TeamManagement = () => {
                 ))}
               </ul>
             )}
-
-            <Link to="/newteamform">
-              <button className='form-Btn line-txt'>Add new team</button>
-            </Link>
+            <button className="form-Btn">
+              <Link className="removeLine line-txt" to="/newteamform">
+                Add New Team
+              </Link>
+            </button>
           </div>
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default TeamManagement
+export default TeamManagement;
