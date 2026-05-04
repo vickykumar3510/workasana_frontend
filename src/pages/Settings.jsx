@@ -88,84 +88,150 @@ const Settings = () => {
           <Sidebar />
 
           <div className="contentArea">
-            <div className="flexBoxesSetting">
-              <div>
-                <h3>Tasks</h3>
+            <div className="settings-sections-stack">
+              <section
+                className="settings-data-panel"
+                aria-labelledby="settings-heading-tasks"
+              >
+                <h3 id="settings-heading-tasks">Tasks</h3>
                 {tasks?.length > 0 ? (
-                  <ul>
-                    {tasks.map((t) => (
-                      <li className="task-name-noHover" key={t._id}>
-                        {t.name}
-                        <button
-                          className="deletBtn"
-                          onClick={() => handleDeleteTask(t._id)}
-                        >
-                          Delete
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="settings-table-wrap">
+                    <table className="settings-data-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col" className="settings-col-action">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tasks.map((t) => (
+                          <tr key={t._id}>
+                            <td className="task-name-noHover">{t.name}</td>
+                            <td className="settings-col-action">
+                              <button
+                                type="button"
+                                className="deletBtn"
+                                onClick={() => handleDeleteTask(t._id)}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : (
                   <p>No tasks found</p>
                 )}
-              </div>
+              </section>
 
-              <div>
-                <h3>Teams</h3>
+              <section
+                className="settings-data-panel"
+                aria-labelledby="settings-heading-teams"
+              >
+                <h3 id="settings-heading-teams">Teams</h3>
                 {teams?.length > 0 ? (
-                  <ul>
-                    {teams.map((t) => (
-                      <li className="team-name" key={t._id}>
-                        {t.name}
-                        <button
-                          className="deletBtn"
-                          onClick={() => handleDeleteTeam(t._id)}
-                        >
-                          Delete
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="settings-table-wrap">
+                    <table className="settings-data-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col" className="settings-col-action">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {teams.map((t) => (
+                          <tr key={t._id}>
+                            <td className="team-name">{t.name}</td>
+                            <td className="settings-col-action">
+                              <button
+                                type="button"
+                                className="deletBtn"
+                                onClick={() => handleDeleteTeam(t._id)}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : (
                   <p>No teams found</p>
                 )}
-              </div>
+              </section>
 
-              <div>
-                <h3>Projects</h3>
+              <section
+                className="settings-data-panel"
+                aria-labelledby="settings-heading-projects"
+              >
+                <h3 id="settings-heading-projects">Projects</h3>
                 {projects?.length > 0 ? (
-                  <ul>
-                    {projects.map((p) => (
-                      <li className="project-name-noHover" key={p._id}>
-                        {p.name}
-                        <button
-                          className="deletBtn"
-                          onClick={() => handleDeleteProject(p._id)}
-                        >
-                          Delete
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="settings-table-wrap">
+                    <table className="settings-data-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col" className="settings-col-action">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {projects.map((p) => (
+                          <tr key={p._id}>
+                            <td className="project-name-noHover">{p.name}</td>
+                            <td className="settings-col-action">
+                              <button
+                                type="button"
+                                className="deletBtn"
+                                onClick={() => handleDeleteProject(p._id)}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : (
                   <p>No projects found</p>
                 )}
-              </div>
+              </section>
 
-              <div>
-                <h3>Owners</h3>
+              <section
+                className="settings-data-panel"
+                aria-labelledby="settings-heading-owners"
+              >
+                <h3 id="settings-heading-owners">Owners</h3>
                 {owners?.length > 0 ? (
-                  <ul>
-                    {owners.map((o) => (
-                      <li className="owner-list" key={o._id}>
-                        {o.name}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="settings-table-wrap">
+                    <table className="settings-data-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Name</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {owners.map((o) => (
+                          <tr key={o._id}>
+                            <td className="owner-list">{o.name}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : (
                   <p>No owners found</p>
                 )}
-              </div>
+              </section>
             </div>
           </div>
         </div>

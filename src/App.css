@@ -56,38 +56,78 @@ ul li {
   flex: 1 1 0%;
 }
 
-.flexBoxesSetting {
+.settings-bg .settings-sections-stack {
   display: flex;
-  gap: 2rem;
-  align-items: stretch;
-  flex-wrap: nowrap;
-}
-
-.settings-bg .flexBoxesSetting {
-  width: min(1040px, 100%);
+  flex-direction: column;
+  gap: 1.75rem;
+  width: min(920px, 100%);
   margin-inline: auto;
 }
 
-.settings-bg .flexBoxesSetting > div {
-  flex: 1 1 0%;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
+.settings-bg .settings-data-panel {
+  border-radius: 14px;
+  border: 1px solid #efddd0;
+  background: rgba(255, 250, 246, 0.96);
+  box-shadow: 0 12px 28px rgba(107, 66, 37, 0.06);
+  padding: 1.15rem 1.25rem 1.25rem;
 }
 
-.settings-bg .flexBoxesSetting > div > h3 {
+.settings-bg .settings-data-panel > h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 800;
   color: #141414;
+  letter-spacing: 0.02em;
 }
 
-.settings-bg .flexBoxesSetting > div > p {
+.settings-bg .settings-data-panel > p {
+  margin: 0;
   color: #8a7265;
   font-size: 0.92rem;
 }
 
-.settings-bg .flexBoxesSetting .task-name-noHover,
-.settings-bg .flexBoxesSetting .team-name,
-.settings-bg .flexBoxesSetting .project-name-noHover,
-.settings-bg .flexBoxesSetting .owner-list {
+.settings-bg .settings-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.settings-bg .settings-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.settings-bg .settings-data-table thead th {
+  text-align: left;
+  padding: 0.45rem 0.65rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9b7660;
+  border-bottom: 1px solid #ead8ca;
+}
+
+.settings-bg .settings-data-table tbody td {
+  padding: 0.78rem 0.65rem;
+  vertical-align: middle;
+  border-top: 1px solid #f2e6dc;
+}
+
+.settings-bg .settings-data-table tbody tr:first-child td {
+  border-top: none;
+}
+
+.settings-bg .settings-col-action {
+  width: 1%;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.settings-bg .settings-data-panel .task-name-noHover,
+.settings-bg .settings-data-panel .team-name,
+.settings-bg .settings-data-panel .project-name-noHover,
+.settings-bg .settings-data-panel .owner-list {
   color: #5e4a3e;
 }
 
@@ -1532,13 +1572,12 @@ h3 {
     justify-content: flex-start;
   }
 
-  .settings-bg .flexBoxesSetting {
-    flex-wrap: wrap;
+  .settings-bg .settings-sections-stack {
+    gap: 1.35rem;
   }
 
-  .settings-bg .flexBoxesSetting > div {
-    flex: 1 1 calc(50% - 1rem);
-    min-width: min(100%, 200px);
+  .settings-bg .settings-data-panel {
+    padding: 1rem 1.05rem 1.1rem;
   }
 }
 
@@ -1582,13 +1621,12 @@ h3 {
     gap: 1rem;
   }
 
-  .flexBoxesSetting {
-    gap: 1rem;
-    font-size: 12px;
+  .settings-bg .settings-sections-stack {
+    gap: 1.15rem;
   }
 
-  .settings-bg .flexBoxesSetting > div {
-    flex: 1 1 100%;
+  .settings-bg .settings-data-table {
+    font-size: 0.85rem;
   }
 
   .stickySidebarWrap {
