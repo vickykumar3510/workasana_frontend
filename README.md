@@ -21,53 +21,88 @@ npm run dev
  * Express
  * MongoDB
  * JWT
+ * bcryptjs 
 
 ## Demo Video
 Watch a walkthrough of all the major features of this app: [Google Drive Link](https://drive.google.com/drive/folders/1Rw7wRkIZIlKVVbajEUWaKlG_HoL8DEIa?usp=sharing)
 
 ## Features
 
+**Login**
+- User login box provided
+- Credentials validated with backend API
+- Incorrect password alerts shown
+- Successful login redirects to dashboard
+- Sign‑up option available
+
+**Sign Up**
+- User account creation form provided
+- Credentials submitted to backend API
+- Success alert shown on account creation
+- Input validation (disabled button until all fields filled)
+- Navigation link back to Sign‑In page
+
 **Dashboard**
-- Display list of projects and task
-- Add Project and Add task button available
-- Taks's filter button available
-- Sidebar for navigate all the pages
+- Displays list of projects with navigation to project details
+- Option to add new tasks and new project
+- Shows user tasks with owners, status, and tags
+- Task filtering by status (All, In Progress, Completed)
+- Sidebar navigation with logout functionality included in all the pages
 
 **Project**
-- Display list of all projects with description and created date
-- Add Project button available
-- Filter by owner dropdown available
+- Displays list of all projects with name, description, and creation date
+- Navigation to individual project management pages
+- Option to add a new project
+- Filter projects by owner using dropdown selection
 
 **Team**
-- Display list of all teams
-- Add new team button available
+- Displays list of all teams
+- Option to add new team
 
 **Report**
-- Total Work Done Last Week, Total Days of Work Pending, Tasks Closed by Team, Tasks Closed by Owner these four auto update reports available
+- Displays summary metrics (work done last week, pending work days)
+- Bar chart of tasks closed by team
+- Pie chart of tasks closed by owner
+- Snapshot of throughput and outstanding effort
 
 **Setting**
-- Display list of Tasks, Teams, Projects and Owners are available
-- Delete button added with Tasks, Teams, Projects
+- Manage and delete tasks
+- Manage and delete teams
+- Manage and delete projects (with confirmation, deletes related tasks too)
+- View list of owners
 
 **Project Management**
-- Display list of all tasks in a project with status, owners, tags, and due date
-- Add new Task button available
-- Dropdown filter by owners and tag are avilable
-- Sort by Due Date and Priority buttons are available
+- Displays tasks for a selected project
+- Filter tasks by owner and tag
+- Sort tasks by due date or priority
+- Shows task details (owners, tags, status, due date)
 
 **Task Details**
-- Display all details of selected task
-- Mark as Completed button available to update the Status
+- Displays full details of a selected task (name, team, owners, tags, due date)
+- Shows task status with badge (Active / Completed)
+- Calculates and displays due date and remaining days
+- Option to mark task as completed with toast notification
 
 **New Project Form**
-- A form with Name and Description text available for create a new project
+- Form to create a new project
+- Validates required fields before submission
+- Success notification shown on project creation
+- Redirects to All Projects page after submission
 
 **New Task Form**
-- A form with Project, Task Name, Team, Owners, Tags, Due Date, Time(in Days), Status, and option to add new tag avilable for create a new task
+- Form to create a new task
+- Assigns task to a project via dropdown
+- Multi‑select for owners and tags
+- Option to add new tags dynamically
+- Auto‑calculation of time to complete (days) from due date
+- Validates required fields before submission
+- Success notification shown on task creation
 
 **New Team Form**
-- A form with Name and Description text available for create a new team
-
+- Form to create a new team
+- Validates required fields before submission
+- Success notification shown on team creation
+- Redirects to Team Management page after submission
 
 ## API Reference
 
@@ -79,7 +114,6 @@ Sample Response:
 [{ _id, name, project, team, owners, tags, timeToComplete, status, createdAt, updatedAt, __v }]
 ```
 
-
 **GET/api/teams**<br>
 List of teams<br> 
 
@@ -87,7 +121,6 @@ Sample Response:
 ```
 [{ _id, name, description, __v }]
 ```
-
 
 **GET/api/projects**<br>
 List of Projects<br> 
@@ -98,7 +131,7 @@ Sample Response:
 ```
 
 **GET/api/auth/me**<br>
-To authenticate user details<br> 
+To authenticate user details<br>
 
 Sample Response:
 ```
@@ -232,7 +265,6 @@ Sample Response:
 ```
 [{ _id, name, project, team, owners, tags, timeToComplete, status, createdAt, updatedAt, __v }]
 ```
-
 
 ## Contact
 For bugs or feature requests, please reach out to vicky.kumar3510@gmail.com
