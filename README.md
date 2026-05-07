@@ -1,6 +1,6 @@
 # Workasana
 
-A full-stack task management and team collaboration tool/app where users can create projects, assign tasks to teams and owners, set deadlines, and organize work using tags. It supports authentication, dynamic filtering, URL-based queries, and reporting features to track task progress and team productivity.
+A full-stack task management and team collaboration application where users can create projects, assign tasks to teams and owners, set deadlines, and organize work using tags. It supports authentication, dynamic filtering, URL-based queries, and reporting features to track task progress and team productivity.
 
 ## Demo Link
 [Live Demo](https://workasana-tool.vercel.app/)
@@ -24,7 +24,7 @@ npm run dev
  * bcryptjs 
 
 ## Demo Video
-Watch a walkthrough of all the major features of this app: [Google Drive Link](https://drive.google.com/drive/folders/1Rw7wRkIZIlKVVbajEUWaKlG_HoL8DEIa?usp=sharing)
+Watch a walkthrough of all the major features of this app: [Google Drive Link](https://drive.google.com/file/d/1SIjU9dYBIlmHsF6ty769lV8dDfpHd-Xf/view?usp=sharing)
 
 ## Features
 
