@@ -1,9 +1,11 @@
 import '../App.css'
 import { useState } from "react"
+import {useNavigate} from "react-router-dom"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify";
 
 const SignUpPage = () => {
+    const navigate = useNavigate()
     const [name, setname] = useState("")
     const [password, setPassword] = useState("")
     const [email, setEmail] = useState("")
@@ -18,8 +20,13 @@ const SignUpPage = () => {
         })
 
         const signUpData = await signUpAuth.json()
-        toast.success("New Account created.");
-       
+
+        if (signUpAuth.ok) {
+            toast.success("New Account created.");
+            navigate("/")
+        } else {
+            toast.error(signUpData.message || "User already exists. Please sign in instead.");
+        }
     }
     return(
         <>

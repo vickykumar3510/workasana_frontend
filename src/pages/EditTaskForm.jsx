@@ -1,23 +1,26 @@
 import "../App.css";
-import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import TeamContext from "../contexts/TeamContext";
 import OwnerContext from "../contexts/OwnerContext";
 import TagContext from "../contexts/TagContext";
 import ProjectContext from "../contexts/ProjectContext";
 import TaskContext from "../contexts/TaskContext";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import MultiSelectDropdown from "../components/MultiSelectDropdown";
 
-const NewTaskForm = () => {
-  const navigate = useNavigate()
+const toId = (value) =>
+  typeof value === "object" && value?._id ? value._id : value;
+
+const EditTaskForm = () => {
+  const navigate = useNavigate();
+  const { taskId } = useParams();
   const { teams } = useContext(TeamContext);
-  const { projects, loading } = useContext(ProjectContext);
+  const { projects, loading: projectsLoading } = useContext(ProjectContext);
   const { owners } = useContext(OwnerContext);
   const { tags, addTag } = useContext(TagContext);
-  const { addTask } = useContext(TaskContext);
+  const { tasks, loading: tasksLoading, updateTask } = useContext(TaskContext);
 
   const [name, setName] = useState("");
   const [team, setTeam] = useState("");
@@ -28,8 +31,10 @@ const NewTaskForm = () => {
   const [timeToComplete, setTimeToComplete] = useState(0);
   const [status, setStatus] = useState("To Do");
   const [project, setProject] = useState("");
+  const [formReady, setFormReady] = useState(false);
 
-  // Calculate days
+  const loading = projectsLoading || tasksLoading;
+
   const calculateDays = (selectedDate) => {
     const today = new Date();
     const due = new Date(selectedDate);
@@ -43,7 +48,42 @@ const NewTaskForm = () => {
     setTimeToComplete(calculateDays(date));
   };
 
-  // Add new tag
+  useEffect(() => {
+    if (!taskId || !tasks.length) return;
+
+    const task = tasks.find((t) => t._id === taskId);
+    if (!task) return;
+
+    setName(task.name);
+    setProject(toId(task.project));
+    setTeam(toId(task.team));
+    setSelectedOwner(
+      Array.isArray(task.owners)
+        ? task.owners.map((owner) => toId(owner))
+        : []
+    );
+    setSelectedTag(
+      Array.isArray(task.tags) ? task.tags.map((tag) => toId(tag)) : []
+    );
+    setStatus(task.status);
+
+    if (task.dueDate) {
+      const dateValue = task.dueDate.includes("T")
+        ? task.dueDate.split("T")[0]
+        : task.dueDate;
+      setDueDate(dateValue);
+      setTimeToComplete(calculateDays(dateValue));
+    } else if (task.timeToComplete != null) {
+      const due = new Date();
+      due.setDate(due.getDate() + Number(task.timeToComplete));
+      const dateValue = due.toISOString().split("T")[0];
+      setDueDate(dateValue);
+      setTimeToComplete(task.timeToComplete);
+    }
+
+    setFormReady(true);
+  }, [taskId, tasks]);
+
   const handleAddTag = async () => {
     if (!newTagName.trim()) {
       toast.error("Tag name cannot be empty");
@@ -70,18 +110,6 @@ const NewTaskForm = () => {
     }
   };
 
-  const resetForm = () => {
-    setName("");
-    setTeam("");
-    setSelectedOwner([]);
-    setSelectedTag([]);
-    setNewTagName("");
-    setDueDate("");
-    setTimeToComplete(0);
-    setStatus("To Do");
-    setProject("");
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -96,7 +124,7 @@ const NewTaskForm = () => {
       return;
     }
 
-    await addTask({
+    await updateTask(taskId, {
       name,
       team,
       owners: ownerSelected,
@@ -107,31 +135,37 @@ const NewTaskForm = () => {
       project,
     });
 
-    navigate('/dashboard')
-    toast.success("New Task created");
-    resetForm();
+    navigate(`/taskdetails/${taskId}`);
+    toast.success("Task updated successfully");
   };
+
+  if (loading || !formReady) {
+    const task = tasks.find((t) => t._id === taskId);
+
+    if (!loading && tasks.length && !task) {
+      return <p className="task-details-not-found">Task not found.</p>;
+    }
+
+    return (
+      <div className="loader-container">
+        <div className="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="formPg-bg">
-      <h1 className='page-title'>New Task Form</h1>
+      <h1 className="page-title">Edit Task Form</h1>
 
       <main className="container">
-        {loading && (
-          <div className="loader-container">
-            <div className="spinner"></div>
-            <p>Loading...</p>
-          </div>
-        )}
-
         <div className="flexBoxes">
           <Sidebar />
 
           <div className="contentArea pm-content">
-            <h3>Create task for project</h3>
+            <h3>Update task</h3>
 
             <form onSubmit={handleSubmit}>
-              {/* PROJECT */}
               <div className="form-row">
                 <label htmlFor="project">Project:</label>
                 <select
@@ -151,7 +185,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* TASK NAME */}
               <div className="form-row">
                 <label htmlFor="taskName">Task Name:</label>
                 <input
@@ -165,7 +198,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* TEAM */}
               <div className="form-row">
                 <label htmlFor="team">Team:</label>
                 <select
@@ -185,7 +217,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* OWNERS (MULTI) */}
               <div className="form-row">
                 <label htmlFor="owners">Owners:</label>
                 <MultiSelectDropdown
@@ -202,7 +233,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* TAGS (MULTI) */}
               <div className="form-row">
                 <label htmlFor="tags">Tags:</label>
                 <MultiSelectDropdown
@@ -219,7 +249,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* ADD TAG (no visible label; spacer via CSS ::before) */}
               <div className="form-row form-row-add-tag-row">
                 <div className="form-row-add-tag-field">
                   <input
@@ -242,7 +271,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* DUE DATE */}
               <div className="form-row">
                 <label htmlFor="dueDate">Due Date:</label>
                 <input
@@ -256,7 +284,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* TIME */}
               <div className="form-row">
                 <label htmlFor="timeToComplete">Time (Days):</label>
                 <input
@@ -270,7 +297,6 @@ const NewTaskForm = () => {
 
               <br />
 
-              {/* STATUS */}
               <div className="form-row">
                 <label htmlFor="status">Status:</label>
                 <select
@@ -288,11 +314,8 @@ const NewTaskForm = () => {
 
               <br />
 
-              <button
-                className="submit-btn"
-                type="submit"
-              >
-                Create Task
+              <button className="submit-btn" type="submit">
+                Update Task
               </button>
             </form>
           </div>
@@ -302,4 +325,4 @@ const NewTaskForm = () => {
   );
 };
 
-export default NewTaskForm;
+export default EditTaskForm;

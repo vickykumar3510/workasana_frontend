@@ -39,6 +39,7 @@ export const ProjectProvider = ({ children }) => {
     return newProject
   } catch (error) {
     console.log("Error while adding project", error)
+    throw error
   }
 }
 

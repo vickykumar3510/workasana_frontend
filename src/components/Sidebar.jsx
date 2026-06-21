@@ -1,8 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Sidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   const logout = () => {
     localStorage.clear();
@@ -10,18 +17,50 @@ function Sidebar() {
     toast.success("Logout successfully.");
   };
 
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <div className="stickySidebarWrap">
-      <nav className="sidebarCSS">
-        <h3 className="company-name">workasana</h3>
+      <nav className={`sidebarCSS ${isMenuOpen ? "sidebarCSS--open" : ""}`}>
+        <div className="sidebarCSS-top">
+          <Link className="sidebarCSS-brand removeLine" to="/dashboard" onClick={closeMenu}>
+            <h3 className="company-name">workasana</h3>
+          </Link>
 
-        <Link className="removeLine" to="/dashboard">Dashboard</Link>
-        <Link className="removeLine" to="/allprojects">Projects</Link>
-        <Link className="removeLine" to="/teammanagement">Team</Link>
-        <Link className="removeLine" to="/reports">Reports</Link>
-        <Link className="removeLine" to="/settings">Settings</Link>
+          <button
+            type="button"
+            className="sidebar-menu-toggle"
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((open) => !open)}
+          >
+            <span className="sidebar-menu-toggle-bar" />
+            <span className="sidebar-menu-toggle-bar" />
+            <span className="sidebar-menu-toggle-bar" />
+          </button>
+        </div>
 
-        <button className="logOutBtn" onClick={logout}>Log Out</button>
+        <div className="sidebarCSS-nav">
+          <Link className="removeLine" to="/dashboard" onClick={closeMenu}>
+            Dashboard
+          </Link>
+          <Link className="removeLine" to="/allprojects" onClick={closeMenu}>
+            Projects
+          </Link>
+          <Link className="removeLine" to="/teammanagement" onClick={closeMenu}>
+            Team
+          </Link>
+          <Link className="removeLine" to="/reports" onClick={closeMenu}>
+            Reports
+          </Link>
+          <Link className="removeLine" to="/settings" onClick={closeMenu}>
+            Settings
+          </Link>
+
+          <button className="logOutBtn" onClick={logout}>
+            Log Out
+          </button>
+        </div>
       </nav>
     </div>
   );

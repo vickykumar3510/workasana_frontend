@@ -8,6 +8,7 @@ import { ProjectProvider } from './contexts/ProjectContext.jsx'
 import { TaskProvider } from './contexts/TaskContext.jsx'
 import NewProjectForm from './pages/NewProjectForm.jsx'
 import NewTaskForm from './pages/NewTaskForm.jsx'
+import EditTaskForm from './pages/EditTaskForm.jsx'
 import { TeamProvider } from './contexts/TeamContext.jsx'
 import { OwnerProvider } from './contexts/OwnerContext.jsx'
 import { TagProvider } from './contexts/TagContext.jsx'
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/newtaskform",
     element: <ProtectedRoute><NewTaskForm /></ProtectedRoute>
+  },
+  {
+    path: "/edittaskform/:taskId",
+    element: <ProtectedRoute><EditTaskForm /></ProtectedRoute>
   },
   {
     path: "/projectmanagement/:projectId",

@@ -6,12 +6,14 @@ import TaskContext from "../contexts/TaskContext"
 import TeamContext from '../contexts/TeamContext'
 import TagContext from '../contexts/TagContext'
 import OwnerContext from '../contexts/OwnerContext'
+import ProjectContext from '../contexts/ProjectContext'
 import Sidebar from "../components/Sidebar";
 
 const TaskDetails = () => {
     const { teams } = useContext(TeamContext)
     const { tags } = useContext(TagContext)
     const { owners: allOwners } = useContext(OwnerContext)
+    const { projects } = useContext(ProjectContext)
 
     const { taskId } = useParams()
     const { tasks, loading, updateTaskStatus } = useContext(TaskContext)
@@ -81,6 +83,16 @@ const TaskDetails = () => {
                                     <dd className="task-details-name">{task.name}</dd>
                                 </div>
                                 <div className="task-details-row">
+                                    <dt>Project</dt>
+                                    <dd>
+                                        {projects.length
+                                            ? typeof task.project === "object"
+                                                ? task.project.name
+                                                : projects.find(p => p._id === task.project)?.name
+                                            : "Loading..."}
+                                    </dd>
+                                </div>
+                                <div className="task-details-row">
                                     <dt>Team</dt>
                                     <dd>
                                         {teams.length
@@ -130,6 +142,12 @@ const TaskDetails = () => {
                             </div>
 
                             <footer className="task-details-actions">
+                                <Link
+                                    to={`/edittaskform/${taskId}`}
+                                    className="removeLine forALine rest-btn task-details-action-btn"
+                                >
+                                    Edit Task
+                                </Link>
                                 <button
                                     type="button"
                                     className={`rest-btn task-details-action-btn ${task.status === "Completed" ? "task-details-action-btn--done" : ""}`}

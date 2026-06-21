@@ -22,12 +22,15 @@ const NewProjectForm = () => {
       return;
     }
 
-    await addProject({ name, description })
-    navigate('/allprojects')
-    toast.success("New Project created.");
-
-    setName("")
-    setDescription("")
+    try {
+      await addProject({ name, description })
+      toast.success("New Project created.");
+      setName("")
+      setDescription("")
+      navigate('/allprojects')
+    } catch {
+      toast.error("Failed to create project. Please try again.");
+    }
   }
 
   return (
@@ -64,7 +67,6 @@ const NewProjectForm = () => {
               <div className="form-row">
                 <label htmlFor="description">Description:</label>
                 <textarea
-                  type="text"
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -75,7 +77,7 @@ const NewProjectForm = () => {
                 style={{ marginLeft: "112px" }}
                 className='submit-btn'
                 type="submit"
-                disabled={!name}
+                disabled={!name.trim() || !description.trim()}
               >
                 Create Project
               </button>

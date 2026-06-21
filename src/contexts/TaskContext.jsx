@@ -43,6 +43,29 @@ const addTask = async (taskData) => {
   }
 };
 
+  // UPDATE TASK
+  const updateTask = async (taskId, taskData) => {
+    try {
+      const res = await fetch(`https://major-project-3-backend.vercel.app/tasks/${taskId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskData),
+      });
+
+      const updatedTask = await res.json();
+
+      setTasks(prev =>
+        prev.map(task =>
+          task._id === updatedTask._id ? updatedTask : task
+        )
+      );
+    } catch (error) {
+      console.log("Update task failed:", error);
+    }
+  };
+
   // UPDATE TASK STATUS
   const updateTaskStatus = async (taskId, status) => {
     try {
@@ -73,7 +96,7 @@ const addTask = async (taskData) => {
 
   return (
     <TaskContext.Provider
-      value={{ loading, tasks, updateTaskStatus, addTask, setTasks }}
+      value={{ loading, tasks, updateTaskStatus, updateTask, addTask, setTasks }}
     >
       {children}
     </TaskContext.Provider>
