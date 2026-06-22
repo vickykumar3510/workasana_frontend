@@ -27,21 +27,25 @@ const NewTaskForm = () => {
   const [dueDate, setDueDate] = useState("");
   const [timeToComplete, setTimeToComplete] = useState(0);
   const [status, setStatus] = useState("To Do");
+  const [priority, setPriority] = useState("Medium");
   const [project, setProject] = useState("");
 
   // Calculate days
-  const calculateDays = (selectedDate) => {
+  const calculateDays = (due) => {
     const today = new Date();
-    const due = new Date(selectedDate);
     const diffTime = due - today;
     return Math.max(Math.ceil(diffTime / (1000 * 60 * 60 * 24)), 0);
   };
 
   const handleDueDateChange = (e) => {
-    const date = e.target.value;
-    setDueDate(date);
-    setTimeToComplete(calculateDays(date));
+    const [year, month, day] = e.target.value.split("-");
+    // Construct local date (not UTC)
+    const localDate = new Date(year, month - 1, day);
+  
+    setDueDate(e.target.value);
+    setTimeToComplete(calculateDays(localDate));
   };
+  
 
   // Add new tag
   const handleAddTag = async () => {
@@ -79,6 +83,7 @@ const NewTaskForm = () => {
     setDueDate("");
     setTimeToComplete(0);
     setStatus("To Do");
+    setPriority("Medium");
     setProject("");
   };
 
@@ -104,6 +109,7 @@ const NewTaskForm = () => {
       dueDate,
       timeToComplete,
       status,
+      priority,
       project,
     });
 
@@ -283,6 +289,23 @@ const NewTaskForm = () => {
                   <option>In Progress</option>
                   <option>Completed</option>
                   <option>Blocked</option>
+                </select>
+              </div>
+
+              <br />
+
+              {/* PRIORITY */}
+              <div className="form-row">
+                <label htmlFor="priority">Priority:</label>
+                <select
+                  id="priority"
+                  name="priority"
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value)}
+                >
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
                 </select>
               </div>
 

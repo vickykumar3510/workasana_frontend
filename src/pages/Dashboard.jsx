@@ -6,6 +6,7 @@ import Sidebar from '../components/Sidebar'
 import ProjectContext from '../contexts/ProjectContext'
 import TaskContext from '../contexts/TaskContext'
 import TagContext from '../contexts/TagContext'
+import OwnerContext from '../contexts/OwnerContext'
 import { toast } from "react-toastify";
 
 const Dashboard = () => {
@@ -14,6 +15,19 @@ const Dashboard = () => {
     const { tags } = useContext(TagContext)
     const { projects, loading } = useContext(ProjectContext)
     const { tasks } = useContext(TaskContext)
+    const { owners: allOwners } = useContext(OwnerContext)
+
+    const getOwnerNames = (owners) =>
+        Array.isArray(owners)
+            ? owners
+                .map(o =>
+                    typeof o === "object" && o?.name
+                        ? o.name
+                        : allOwners.find(owner => owner._id === o)?.name
+                )
+                .filter(Boolean)
+                .join(", ")
+            : "—"
 
     const [taskFilter, setTaskFilter] = useState("All")
 
@@ -77,7 +91,7 @@ const Dashboard = () => {
                                                 <div className="taskRowBox-field">
                                                     <span className="taskRowBox-kicker">Owners</span>
                                                     <span className='miniBox'>
-                                                        {task.owners.map(o => o.name).join(", ")}
+                                                        {getOwnerNames(task.owners)}
                                                     </span>
                                                 </div>
                                                 <div className="taskRowBox-field">

@@ -45,25 +45,37 @@ const addTask = async (taskData) => {
 
   // UPDATE TASK
   const updateTask = async (taskId, taskData) => {
-    try {
-      const res = await fetch(`https://major-project-3-backend.vercel.app/tasks/${taskId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(taskData),
-      });
+    const res = await fetch(`https://major-project-3-backend.vercel.app/tasks/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskData),
+    });
 
-      const updatedTask = await res.json();
+    const updatedTask = await res.json();
 
-      setTasks(prev =>
-        prev.map(task =>
-          task._id === updatedTask._id ? updatedTask : task
-        )
-      );
-    } catch (error) {
-      console.log("Update task failed:", error);
+    if (!res.ok) {
+      throw new Error(updatedTask.message || "Update task failed");
     }
+
+    const { owners: selectedOwners, tags: selectedTags, ...restTaskData } = taskData;
+
+    setTasks(prev =>
+      prev.map(task =>
+        task._id === taskId
+          ? {
+              ...task,
+              ...updatedTask,
+              ...restTaskData,
+              owners: updatedTask.owners ?? selectedOwners ?? task.owners,
+              tags: updatedTask.tags ?? selectedTags ?? task.tags,
+            }
+          : task
+      )
+    );
+
+    return updatedTask;
   };
 
   // UPDATE TASK STATUS
@@ -82,7 +94,7 @@ const addTask = async (taskData) => {
     
       setTasks(prev =>
         prev.map(task =>
-          task._id === updatedTask._id ? updatedTask : task
+          task._id === updatedTask._id ? { ...task, ...updatedTask } : task
         )
       );
     } catch (error) {

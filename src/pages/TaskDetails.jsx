@@ -129,6 +129,10 @@ const TaskDetails = () => {
                                     </dd>
                                 </div>
                                 <div className="task-details-row">
+                                    <dt>Priority</dt>
+                                    <dd>{task.priority || "Medium"}</dd>
+                                </div>
+                                <div className="task-details-row">
                                     <dt>Due date</dt>
                                     <dd>{dueDate.toLocaleDateString()}</dd>
                                 </div>

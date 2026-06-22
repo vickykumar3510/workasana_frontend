@@ -14,7 +14,15 @@ const ProjectManagement = () => {
   const { owners } = useContext(OwnerContext)
   const { tags } = useContext(TagContext)
 
-  // owner, tag, and sort state
+  const getOwnerName = (owner) =>
+    typeof owner === "object" && owner?.name
+      ? owner.name
+      : owners.find(o => o._id === owner)?.name
+
+  const getOwnerNames = (owners) =>
+    Array.isArray(owners)
+      ? owners.map(getOwnerName).filter(Boolean).join(", ") || "—"
+      : "—"
   const [selectedOwner, setSelectedOwner] = useState("")
   const [selectedTag, setSelectedTag] = useState("")
   const [sortBy, setSortBy] = useState("")
@@ -32,7 +40,7 @@ const ProjectManagement = () => {
   // Owner dropdown list
   const ownerList = Array.from(
     new Set(
-      projectTasks.flatMap(task => task.owners?.map(o => o.name) || [])
+      projectTasks.flatMap(task => task.owners?.map(getOwnerName).filter(Boolean) || [])
     )
   )
 
@@ -47,7 +55,9 @@ const ProjectManagement = () => {
 
   // Filter tasks by owner and tag
   let filteredTasks = projectTasks.filter(task => {
-    const ownerMatch = selectedOwner ? task.owners?.some(o => o.name === selectedOwner) : true
+    const ownerMatch = selectedOwner
+      ? task.owners?.some(o => getOwnerName(o) === selectedOwner)
+      : true
     const tagMatch = selectedTag
       ? task.tags?.some(tagId => tags.find(tag => tag._id === tagId)?.name === selectedTag)
       : true
@@ -126,7 +136,7 @@ const ProjectManagement = () => {
                                     <dt className="pm-meta-label">Owners</dt>
                                     <dd className="pm-meta-value">
                                       <span className="pm-chip pm-chip--owner">
-                                        {t.owners?.map(o => o.name).join(", ") || "—"}
+                                        {getOwnerNames(t.owners)}
                                       </span>
                                     </dd>
                                   </div>

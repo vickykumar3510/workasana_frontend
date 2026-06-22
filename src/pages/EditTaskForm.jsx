@@ -30,23 +30,27 @@ const EditTaskForm = () => {
   const [dueDate, setDueDate] = useState("");
   const [timeToComplete, setTimeToComplete] = useState(0);
   const [status, setStatus] = useState("To Do");
+  const [priority, setPriority] = useState("Medium");
   const [project, setProject] = useState("");
   const [formReady, setFormReady] = useState(false);
 
   const loading = projectsLoading || tasksLoading;
 
-  const calculateDays = (selectedDate) => {
+  const calculateDays = (due) => {
     const today = new Date();
-    const due = new Date(selectedDate);
     const diffTime = due - today;
     return Math.max(Math.ceil(diffTime / (1000 * 60 * 60 * 24)), 0);
   };
 
   const handleDueDateChange = (e) => {
-    const date = e.target.value;
-    setDueDate(date);
-    setTimeToComplete(calculateDays(date));
+    const [year, month, day] = e.target.value.split("-");
+    // Construct local date (not UTC)
+    const localDate = new Date(year, month - 1, day);
+  
+    setDueDate(e.target.value);
+    setTimeToComplete(calculateDays(localDate));
   };
+  
 
   useEffect(() => {
     if (!taskId || !tasks.length) return;
@@ -66,6 +70,7 @@ const EditTaskForm = () => {
       Array.isArray(task.tags) ? task.tags.map((tag) => toId(tag)) : []
     );
     setStatus(task.status);
+    setPriority(task.priority || "Medium");
 
     if (task.dueDate) {
       const dateValue = task.dueDate.includes("T")
@@ -124,19 +129,24 @@ const EditTaskForm = () => {
       return;
     }
 
-    await updateTask(taskId, {
-      name,
-      team,
-      owners: ownerSelected,
-      tags: tagSelected,
-      dueDate,
-      timeToComplete,
-      status,
-      project,
-    });
+    try {
+      await updateTask(taskId, {
+        name,
+        team,
+        owners: ownerSelected,
+        tags: tagSelected,
+        dueDate,
+        timeToComplete,
+        status,
+        priority,
+        project,
+      });
 
-    navigate(`/taskdetails/${taskId}`);
-    toast.success("Task updated successfully");
+      navigate(`/taskdetails/${taskId}`);
+      toast.success("Task updated successfully");
+    } catch {
+      toast.error("Failed to update task");
+    }
   };
 
   if (loading || !formReady) {
@@ -314,6 +324,29 @@ const EditTaskForm = () => {
 
               <br />
 
+              <div className="form-row">
+                <label htmlFor="priority">Priority:</label>
+                <select
+                  id="priority"
+                  name="priority"
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value)}
+                >
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+
+              <br />
+
+              <button
+                type="button"
+                className="rest-btn"
+                onClick={() => navigate(`/taskdetails/${taskId}`)}
+              >
+                Cancel
+              </button>{" "}
               <button className="submit-btn" type="submit">
                 Update Task
               </button>
